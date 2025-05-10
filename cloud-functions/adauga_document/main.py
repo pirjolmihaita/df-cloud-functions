@@ -22,6 +22,10 @@ def adauga_document(request):
 
     valoare_cu_zgomot = adauga_zgomot_laplace(valoare_reală, epsilon)
 
+    #  Afișează în log dacă valoarea cu zgomot depășește 100
+    if valoare_cu_zgomot > 100:
+        print(f"ALERTA: Valoare mare pentru {nume}: {valoare_cu_zgomot}")
+
     db = firestore.Client()
     db.collection("persoane").add({
         "nume": nume,
