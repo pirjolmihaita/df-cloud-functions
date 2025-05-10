@@ -14,7 +14,7 @@ steps:
       - --trigger-http
       - --entry-point=adauga_document
       - --allow-unauthenticated
-      - --source=.
+      - --source=cloud-functions/adauga_document
 
 timeout: 300s
 
