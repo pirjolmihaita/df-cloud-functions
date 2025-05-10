@@ -3,9 +3,10 @@ import random
 import math
 from google.cloud import firestore
 import numpy as np
-
+from flask import jsonify
 # Distribuție Laplace
 def adauga_zgomot_laplace(valoare_reală, epsilon):
+    print(".,")
     b = 1 / epsilon
     zgomot = np.random.laplace(loc=0.0, scale=b)
     return valoare_reală + zgomot
