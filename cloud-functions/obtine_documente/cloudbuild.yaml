@@ -1,0 +1,14 @@
+steps:
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - functions
+      - deploy
+      - obtine_documente
+      - --gen2
+      - --runtime=python312
+      - --region=europe-west1
+      - --trigger-http
+      - --entry-point=obtine_documente
+      - --allow-unauthenticated
+      - --source=.
