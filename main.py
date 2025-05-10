@@ -32,13 +32,3 @@ def adauga_document(request):
 
     return f"Adăugat {nume} cu zgomot: {valoare_cu_zgomot}", 200
 
-@functions_framework.http
-def obtine_documente(request):
-    db = firestore.Client()
-    rezultate = db.collection("persoane").stream()
-
-    lista = []
-    for doc in rezultate:
-        lista.append(doc.to_dict())
-
-    return jsonify(lista), 200
