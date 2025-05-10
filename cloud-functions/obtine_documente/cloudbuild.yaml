@@ -1,3 +1,5 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
 steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
@@ -11,4 +13,4 @@ steps:
       - --trigger-http
       - --entry-point=obtine_documente
       - --allow-unauthenticated
-      - --source=.
+      - --source=cloud-functions/obtine_documente
