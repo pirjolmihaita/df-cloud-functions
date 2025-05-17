@@ -13,4 +13,4 @@ steps:
       - --trigger-http
       - --entry-point=obtine_documente
       - --allow-unauthenticated
-      - --source=cloud-functions/exporta_persoane_bucket
+      - --source=cloud-functions/exporta_persoane
