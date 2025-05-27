@@ -1,6 +1,9 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
+
 steps:
-  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
-    entrypoint: gcloud
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
     args:
       - functions
       - deploy
@@ -10,19 +13,6 @@ steps:
       - --region=europe-west1
       - --trigger-http
       - --entry-point=obtine_documente
-      - --source=cloud-functions/obtine_documente
       - --allow-unauthenticated
+      - --source=cloud-functions/obtine_documente
 
-  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
-    entrypoint: gcloud
-    args:
-      - functions
-      - add-iam-policy-binding
-      - obtine_documente
-      - --gen2
-      - --region=europe-west1
-      - --member=allUsers
-      - --role=roles/cloudfunctions.invoker
-
-options:
-  logging: CLOUD_LOGGING_ONLY
