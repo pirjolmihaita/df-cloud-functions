@@ -8,4 +8,8 @@ def obtine_documente(request):
     rezultate = db.collection("persoane").stream()
 
     lista = [doc.to_dict() for doc in rezultate]
+
+    if not lista:
+        return jsonify({"mesaj": "Nu există nicio persoană în Firestore."}), 200
+
     return jsonify(lista), 200
