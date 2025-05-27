@@ -11,6 +11,6 @@ steps:
       - --runtime=python312
       - --region=europe-west1
       - --trigger-http
-      - --entry-point=obtine_documente
+      - --entry-point=exporta_persoane
       - --allow-unauthenticated
       - --source=cloud-functions/export_persoane_bucket
