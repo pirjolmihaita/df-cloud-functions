@@ -1,5 +1,6 @@
 import functions_framework
-from flask import jsonify
+from flask import make_response
+import json
 from google.cloud import firestore
 
 @functions_framework.http
@@ -10,6 +11,16 @@ def obtine_documente(request):
     lista = [doc.to_dict() for doc in rezultate]
 
     if not lista:
-        return jsonify({"mesaj": "Nu există nicio persoană în Firestore."}), 200
+        raspuns = {"mesaj": "Nu există nicio persoană în Firestore."}
+        return make_response(
+            json.dumps(raspuns, ensure_ascii=False),
+            200,
+            {"Content-Type": "application/json"}
+        )
 
-    return jsonify(lista), 200
+    return make_response(
+        json.dumps(lista, ensure_ascii=False),
+        200,
+        {"Content-Type": "application/json"}
+    )
+
