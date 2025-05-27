@@ -6,7 +6,7 @@ steps:
     args:
       - functions
       - deploy
-      - obtine_documente
+      - exporta_persoane
       - --gen2
       - --runtime=python312
       - --region=europe-west1
