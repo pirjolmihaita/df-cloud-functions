@@ -3,6 +3,8 @@ import random
 import math
 from google.cloud import firestore
 import numpy as np
+from flask import jsonify
+
 
 # Distribuție Laplace
 def adauga_zgomot_laplace(valoare_reală, epsilon):
@@ -41,6 +43,10 @@ def adauga_document(request):
 
     except Exception as e:
         print(f"Eroare: {str(e)}")
-        return {"error": "A apărut o eroare internă."}, 500
+        return jsonify({
+            "status": "error",
+            "mesaj": "A apărut o eroare internă.",
+            "detalii": str(e)
+        }), 500
 
 
