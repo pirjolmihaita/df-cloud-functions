@@ -43,10 +43,11 @@ def adauga_document(request):
 
     except Exception as e:
         print(f"Eroare: {str(e)}")
-        return jsonify({
+        mesaj = {
             "status": "error",
             "mesaj": "A apărut o eroare internă.",
             "detalii": str(e)
-        }), 500
+        }
+        return Response(json.dumps(mesaj, ensure_ascii=False), status=500, mimetype='application/json')
 
 
