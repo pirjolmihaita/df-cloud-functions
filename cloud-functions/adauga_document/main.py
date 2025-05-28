@@ -1,14 +1,13 @@
 import functions_framework
-import random
-import math
 from google.cloud import firestore
 import numpy as np
-from flask import jsonify
-
+import json
+from flask import Response
 
 # Distribuție Laplace
 def adauga_zgomot_laplace(valoare_reală, epsilon):
-    print(".")
+    if epsilon <= 0:
+        raise ValueError("Epsilon trebuie să fie mai mare ca 0")
     b = 1 / epsilon
     zgomot = np.random.laplace(loc=0.0, scale=b)
     return valoare_reală + zgomot
@@ -19,27 +18,36 @@ def adauga_document(request):
     try:
         data = request.get_json()
 
-        nume = data.get("nume")
-        valoare_reală = data.get("valoare_reală")
+        id_persoana = data.get("id")
+        venit_real = data.get("venit")
         epsilon = data.get("epsilon")
 
-        if None in (nume, valoare_reală, epsilon):
-            return {"error": "Date lipsă în cerere"}, 400
-
-        valoare_cu_zgomot = adauga_zgomot_laplace(valoare_reală, epsilon)
-
-        if valoare_cu_zgomot > 100:
-            print(f"ALERTA: Valoare mare pentru {nume}: {valoare_cu_zgomot}")
+        if None in (id_persoana, venit_real, epsilon):
+            return Response(json.dumps({"error": "Date lipsă: id, venit sau epsilon"}, ensure_ascii=False), status=400, mimetype='application/json')
 
         db = firestore.Client()
-        db.collection("persoane").add({
-            "nume": nume,
-            "valoare_reală": valoare_reală,
-            "valoare_cu_zgomot": valoare_cu_zgomot,
+
+        # Verifică dacă id-ul deja există
+        doc_ref = db.collection("persoane").document(id_persoana)
+        if doc_ref.get().exists:
+            return Response(json.dumps({"error": f"Persoană cu ID-ul '{id_persoana}' există deja."}, ensure_ascii=False), status=409, mimetype='application/json')
+
+        venit_cu_zgomot = adauga_zgomot_laplace(venit_real, epsilon)
+
+        if venit_cu_zgomot > 100000:
+            print(f"ALERTA: Venit mare pentru ID {id_persoana}: {venit_cu_zgomot}")
+
+        doc_ref.set({
+            "venit_real": venit_real,
+            "venit_cu_zgomot": venit_cu_zgomot,
             "epsilon": epsilon
         })
 
-        return f"Adăugat {nume} cu zgomot: {valoare_cu_zgomot}", 200
+        mesaj = {
+            "status": "success",
+            "mesaj": f"Adăugat ID {id_persoana} cu venit zgomotos: {venit_cu_zgomot:.2f}"
+        }
+        return Response(json.dumps(mesaj, ensure_ascii=False), status=200, mimetype='application/json')
 
     except Exception as e:
         print(f"Eroare: {str(e)}")
@@ -49,5 +57,6 @@ def adauga_document(request):
             "detalii": str(e)
         }
         return Response(json.dumps(mesaj, ensure_ascii=False), status=500, mimetype='application/json')
+
 
 
