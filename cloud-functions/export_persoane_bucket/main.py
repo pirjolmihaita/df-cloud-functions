@@ -7,13 +7,22 @@ from flask import make_response
 @functions_framework.http
 def exporta_persoane(request):
     try:
+        # Inițializează clienții Firestore și Storage
         db = firestore.Client()
         storage_client = storage.Client()
 
+        # Citește documentele din colecția "persoane"
         persoane_ref = db.collection("persoane")
         docs = persoane_ref.stream()
-        persoane = [doc.to_dict() for doc in docs]
+        persoane = []
 
+        for doc in docs:
+            data = doc.to_dict()
+            # Elimină câmpul venit_real (date sensibile)
+            data.pop("venit_real", None)
+            persoane.append(data)
+
+        # Verifică dacă lista e goală
         if not persoane:
             mesaj = {
                 "status": "info",
@@ -25,9 +34,11 @@ def exporta_persoane(request):
                 {"Content-Type": "application/json"}
             )
 
+        # Creează JSON și nume de fișier
         json_data = json.dumps(persoane, indent=2, ensure_ascii=False)
         filename = f"export_persoane_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
+        # Încarcă în Cloud Storage
         bucket_name = "persoane-bucket"
         bucket = storage_client.bucket(bucket_name)
         blob = bucket.blob(filename)
@@ -55,3 +66,4 @@ def exporta_persoane(request):
             500,
             {"Content-Type": "application/json"}
         )
+
