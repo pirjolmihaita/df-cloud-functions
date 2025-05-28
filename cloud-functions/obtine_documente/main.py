@@ -12,9 +12,17 @@ def obtine_documente(request):
 
         if not lista:
             raspuns = {"mesaj": "Nu există nicio persoană în Firestore."}
-            return Response(json.dumps(raspuns, ensure_ascii=False), status=200, mimetype='application/json')
+            return make_response(
+                json.dumps(raspuns, ensure_ascii=False),
+                200,
+                {"Content-Type": "application/json"}
+            )
 
-        return Response(json.dumps(lista, ensure_ascii=False), status=200, mimetype='application/json')
+        return make_response(
+            json.dumps(lista, ensure_ascii=False),
+            200,
+            {"Content-Type": "application/json"}
+        )
 
     except Exception as e:
         print(f"Eroare: {str(e)}")
@@ -23,4 +31,9 @@ def obtine_documente(request):
             "mesaj": "A apărut o eroare internă.",
             "detalii": str(e)
         }
-        return Response(json.dumps(mesaj, ensure_ascii=False), status=500, mimetype='application/json')
+        return make_response(
+            json.dumps(mesaj, ensure_ascii=False),
+            500,
+            {"Content-Type": "application/json"}
+        )
+
