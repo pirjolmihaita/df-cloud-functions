@@ -14,25 +14,33 @@ def adauga_zgomot_laplace(valoare_reală, epsilon):
 # Funcție HTTP trigger
 @functions_framework.http
 def adauga_document(request):
-    data = request.get_json()
+    try:
+        data = request.get_json()
 
-    nume = data.get("nume")
-    valoare_reală = data.get("valoare_reală")
-    epsilon = data.get("epsilon")
+        nume = data.get("nume")
+        valoare_reală = data.get("valoare_reală")
+        epsilon = data.get("epsilon")
 
-    valoare_cu_zgomot = adauga_zgomot_laplace(valoare_reală, epsilon)
+        if None in (nume, valoare_reală, epsilon):
+            return {"error": "Date lipsă în cerere"}, 400
 
-    #  Afișează în log dacă valoarea cu zgomot depășește 100
-    if valoare_cu_zgomot > 100:
-        print(f"ALERTA: Valoare mare pentru {nume}: {valoare_cu_zgomot}")
+        valoare_cu_zgomot = adauga_zgomot_laplace(valoare_reală, epsilon)
 
-    db = firestore.Client()
-    db.collection("persoane").add({
-        "nume": nume,
-        "valoare_reală": valoare_reală,
-        "valoare_cu_zgomot": valoare_cu_zgomot,
-        "epsilon": epsilon
-    })
+        if valoare_cu_zgomot > 100:
+            print(f"ALERTA: Valoare mare pentru {nume}: {valoare_cu_zgomot}")
 
-    return f"Adăugat {nume} cu zgomot: {valoare_cu_zgomot}", 200
+        db = firestore.Client()
+        db.collection("persoane").add({
+            "nume": nume,
+            "valoare_reală": valoare_reală,
+            "valoare_cu_zgomot": valoare_cu_zgomot,
+            "epsilon": epsilon
+        })
+
+        return f"Adăugat {nume} cu zgomot: {valoare_cu_zgomot}", 200
+
+    except Exception as e:
+        print(f"Eroare: {str(e)}")
+        return {"error": "A apărut o eroare internă."}, 500
+
 
