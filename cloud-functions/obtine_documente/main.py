@@ -11,7 +11,7 @@ def obtine_documente(request):
         lista = [doc.to_dict() for doc in rezultate]
 
         if not lista:
-            raspuns = {"mesaj": "Nu există nicio persoană în Firestore."}
+            raspuns = {"mesaj": "Nu exista nicio persoana in Firestore."}
             return make_response(
                 json.dumps(raspuns, ensure_ascii=False),
                 200,
@@ -28,7 +28,7 @@ def obtine_documente(request):
         print(f"Eroare: {str(e)}")
         mesaj = {
             "status": "error",
-            "mesaj": "A apărut o eroare internă.",
+            "mesaj": "A aparut o eroare interna.",
             "detalii": str(e)
         }
         return make_response(
