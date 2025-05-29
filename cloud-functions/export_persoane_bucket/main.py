@@ -7,26 +7,26 @@ from flask import make_response
 @functions_framework.http
 def exporta_persoane(request):
     try:
-        # Inițializează clienții Firestore și Storage
+        # Initializeaza clientii Firestore si Storage
         db = firestore.Client()
         storage_client = storage.Client()
 
-        # Citește documentele din colecția "persoane"
+        # Citeste documentele din colectia "persoane"
         persoane_ref = db.collection("persoane")
         docs = persoane_ref.stream()
         persoane = []
 
         for doc in docs:
             data = doc.to_dict()
-            # Elimină câmpul venit_real (date sensibile)
+            # Elimina câmpul venit_real (date sensibile)
             data.pop("venit_real", None)
             persoane.append(data)
 
-        # Verifică dacă lista e goală
+        # Verifica daca lista e goala
         if not persoane:
             mesaj = {
                 "status": "info",
-                "mesaj": "Nu există persoane în Firestore."
+                "mesaj": "Nu exista persoane In Firestore."
             }
             return make_response(
                 json.dumps(mesaj, ensure_ascii=False),
@@ -34,11 +34,11 @@ def exporta_persoane(request):
                 {"Content-Type": "application/json"}
             )
 
-        # Creează JSON și nume de fișier
+        # Creeaza JSON si nume de fisier
         json_data = json.dumps(persoane, indent=2, ensure_ascii=False)
         filename = f"export_persoane_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
-        # Încarcă în Cloud Storage
+        # Incarca In Cloud Storage
         bucket_name = "persoane-bucket"
         bucket = storage_client.bucket(bucket_name)
         blob = bucket.blob(filename)
@@ -46,7 +46,7 @@ def exporta_persoane(request):
 
         mesaj = {
             "status": "success",
-            "mesaj": f"Exportat {len(persoane)} persoane în {filename}"
+            "mesaj": f"Exportat {len(persoane)} persoane In {filename}"
         }
         return make_response(
             json.dumps(mesaj, ensure_ascii=False),
@@ -58,7 +58,7 @@ def exporta_persoane(request):
         print(f"Eroare: {str(e)}")
         mesaj = {
             "status": "error",
-            "mesaj": "A apărut o eroare la exportul persoanelor.",
+            "mesaj": "A aparut o eroare la exportul persoanelor.",
             "detalii": str(e)
         }
         return make_response(
