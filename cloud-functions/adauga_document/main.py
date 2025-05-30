@@ -34,7 +34,7 @@ def adauga_document(request):
 
         venit_cu_zgomot = adauga_zgomot_laplace(venit_real, epsilon)
 
-        if venit_cu_zgomot > 100000:
+        if venit_cu_zgomot > 100:
             print(f"ALERTA: Venit mare pentru ID {id_persoana}: {venit_cu_zgomot}")
 
         doc_ref.set({
