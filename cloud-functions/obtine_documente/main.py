@@ -8,7 +8,12 @@ def obtine_documente(request):
     try:
         db = firestore.Client()
         rezultate = db.collection("persoane").stream()
-        lista = [doc.to_dict() for doc in rezultate]
+
+        lista = []
+        for doc in rezultate:
+            data = doc.to_dict()
+            data["id"] = doc.id  
+            lista.append(data)
 
         if not lista:
             raspuns = {"mesaj": "Nu exista nicio persoana in Firestore."}
@@ -36,4 +41,5 @@ def obtine_documente(request):
             500,
             {"Content-Type": "application/json"}
         )
+
 
