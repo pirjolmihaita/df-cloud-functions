@@ -2,11 +2,6 @@ options:
   logging: CLOUD_LOGGING_ONLY
 
 steps:
-  - name: 'python'
-    entrypoint: pip
-    args: ['install', '-r', 'cloud-functions/adauga_document/requirements.txt']
-  
-steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
     args:
